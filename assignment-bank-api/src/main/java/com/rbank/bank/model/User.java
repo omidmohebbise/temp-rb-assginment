@@ -31,6 +31,7 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles" , joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
             inverseJoinColumns =@JoinColumn(name = "roleId",referencedColumnName ="id") )
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
     public User( String fullName,String username, String password) {
