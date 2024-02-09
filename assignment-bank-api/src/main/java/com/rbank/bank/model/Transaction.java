@@ -1,11 +1,17 @@
 package com.rbank.bank.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "transactions", schema = "bank_schema")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class Transaction {
 
     @Id
@@ -26,4 +32,6 @@ public class Transaction {
     @Column(nullable = false)
     private LocalDateTime transactionDateTime;
 
+    public Transaction(Account sourceAccount, Account destinationAccount, double amount) {
+    }
 }

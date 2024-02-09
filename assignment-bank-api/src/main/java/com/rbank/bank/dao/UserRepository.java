@@ -11,4 +11,6 @@ public interface UserRepository {
     User save(User user);
 
     long count();
+
+    Optional<User> findById(Long userId);
 }

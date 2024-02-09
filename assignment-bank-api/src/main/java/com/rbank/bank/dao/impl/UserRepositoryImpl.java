@@ -27,4 +27,9 @@ public class UserRepositoryImpl implements UserRepository {
     public long count() {
         return repository.count();
     }
+
+    @Override
+    public Optional<User> findById(Long userId) {
+        return repository.findById(userId);
+    }
 }
