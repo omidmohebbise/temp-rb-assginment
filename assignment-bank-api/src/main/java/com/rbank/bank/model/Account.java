@@ -25,7 +25,6 @@ public class Account {
     @Column(nullable = false)
     private double balance;
 
-    @ManyToOne
-    @JoinColumn(name = "userId", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
 }

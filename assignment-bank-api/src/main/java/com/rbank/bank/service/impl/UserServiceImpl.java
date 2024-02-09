@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
                 .fullName(fullName)
                 .username(username)
                 .password(password)
+                .roles(Set.of(Role.builder().title("USER").build()))
                 .enabled(false)
                 .verified(false)
                 .build());

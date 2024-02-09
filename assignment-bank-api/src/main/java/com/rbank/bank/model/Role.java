@@ -2,15 +2,14 @@ package com.rbank.bank.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "roles" , schema = "security_schema")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class Role {
 
     @Id
