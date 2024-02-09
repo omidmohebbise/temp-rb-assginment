@@ -60,5 +60,10 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    public boolean isValidUser(Long aLong) {
+        return getUserById(aLong)!=null;
+    }
+
 
 }

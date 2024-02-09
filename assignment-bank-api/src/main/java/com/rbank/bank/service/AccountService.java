@@ -12,8 +12,8 @@ import java.util.List;
 public interface AccountService {
     Account createAccount(CreateAccount account);
     List<Account> getAllAccounts(int page, int size);
-    Account getAccountById(Long id);
-    Account updateAccount(Long id, UpdateAccount accountDetails);
+    Account getAccountById(long id);
+    Account updateAccount(long id, UpdateAccount accountDetails);
     void deleteAccount(Long id);
     Transaction transferMoney(TransferMoneyDto transferMoneyDto);
 }

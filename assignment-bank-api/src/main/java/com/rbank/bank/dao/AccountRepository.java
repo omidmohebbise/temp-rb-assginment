@@ -10,9 +10,9 @@ import java.util.Optional;
 public interface AccountRepository {
     List<Account> findAll(Pageable pageable);
 
-    Optional<Account> findById(Long id);
+    Optional<Account> findByAccountId(Long accountId);
 
     Account save(Account existingAccount);
 
-    void deleteById(Long id);
+    void deleteById(Account existingAccount);
 }

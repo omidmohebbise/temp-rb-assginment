@@ -7,7 +7,6 @@ import com.rbank.bank.model.Transaction;
 import com.rbank.bank.model.User;
 import com.rbank.bank.model.exception.AccountNotFoundException;
 import com.rbank.bank.model.exception.InsufficientBalanceException;
-import com.rbank.bank.model.exception.UserNotFound;
 import com.rbank.bank.service.AccountService;
 import com.rbank.bank.service.UserService;
 import com.rbank.bank.service.dto.CreateAccount;
@@ -51,12 +50,12 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.findAll(Pageable.ofSize(size).withPage(page));
     }
 
-    public Account getAccountById(Long id) {
-            return accountRepository.findById(id).orElseThrow(() ->
+    public Account getAccountById(long id) {
+            return accountRepository.findByAccountId(id).orElseThrow(() ->
                     new AccountNotFoundException(" Account not found with id: " + id + " "));
     }
 
-    public Account updateAccount(Long id, UpdateAccount accountDetails) {
+    public Account updateAccount(long id, UpdateAccount accountDetails) {
         accountValidator.isValid(accountDetails);
         Account account = getAccountById(id);
         account.setAccountHolderName(accountDetails.accountHolderName());
@@ -64,9 +63,8 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.save(account);
     }
 
-    public void deleteAccount(Long userId) {
-        userService.getUserById(userId);
-        accountRepository.deleteById(userId);
+    public void deleteAccount(Long accountId) {
+        accountRepository.deleteById(getAccountById(accountId));
     }
 
     public Transaction transferMoney(TransferMoneyDto transferMoneyDto) {

@@ -16,4 +16,7 @@ public interface UserService extends UserDetailsService {
 
     Optional<User> findUserById(Long aLong);
     User getUserById(Long aLong);
+    boolean isValidUser(Long aLong);
+
+
 }
