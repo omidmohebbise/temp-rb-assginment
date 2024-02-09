@@ -44,3 +44,6 @@ create table security_schema.verifications
             references security_schema.users
 );
 
+
+insert into security_schema.roles (id, description, title) values (1, 'Admin', 'USER');
+
