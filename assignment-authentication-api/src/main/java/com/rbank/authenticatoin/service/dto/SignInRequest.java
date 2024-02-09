@@ -1,4 +1,4 @@
 package com.rbank.authenticatoin.service.dto;
 
-public record SignInRequest(String email, String password){
+public record SignInRequest(String username, String password){
 }

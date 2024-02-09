@@ -23,6 +23,11 @@ public class UserServiceImpl implements UserService {
         return new UserPrincipals(user.getUsername(), user.getPassword(), user.getRoles().stream().map(Role::getTitle).toList());
     }
 
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
 
     public User createUser(String fullName, String username, String password) {
         return userRepository.save(User.builder()

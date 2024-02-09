@@ -1,14 +1,22 @@
 package com.rbank.authenticatoin.service.impl;
 
 import com.rbank.authenticatoin.dao.UserVerificationRepository;
+import com.rbank.authenticatoin.model.Role;
 import com.rbank.authenticatoin.model.User;
+import com.rbank.authenticatoin.model.UserPrincipals;
 import com.rbank.authenticatoin.model.UserVerification;
 import com.rbank.authenticatoin.service.AuthService;
+import com.rbank.authenticatoin.service.JwtService;
 import com.rbank.authenticatoin.service.dto.EmailVerificationRequest;
+import com.rbank.authenticatoin.service.dto.JwtAuthenticationResponse;
+import com.rbank.authenticatoin.service.dto.SignInRequest;
 import com.rbank.authenticatoin.service.dto.SignUpRequest;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +29,15 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserServiceImpl userServiceImpl;
     private final UserVerificationRepository userVerificationRepository;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     @Override
     public User signUp(SignUpRequest signUpRequest) {
         User user = userServiceImpl.createUser(signUpRequest.fullName(),
-                signUpRequest.email(), defaultPasswordGenerator());
+                signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()));
         createVerificationCode(user);
         return user;
     }
@@ -54,11 +65,14 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public User signIn(SignUpRequest signInRequest) {
-        return null;
+    public JwtAuthenticationResponse signIn(SignInRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.username(), request.password()));
+        User user = userServiceImpl.findUserByUsername(request.username());
+        var userPrincipals = new UserPrincipals(user.getUsername(), user.getPassword(),
+                user.getRoles().stream().map(Role::getTitle).toList());
+        var jwt = jwtService.generateToken(userPrincipals);
+        return new JwtAuthenticationResponse(jwt);
     }
 
-    private String defaultPasswordGenerator() {
-        return RandomStringUtils.randomAlphanumeric(10) + RandomStringUtils.randomNumeric(2) + RandomStringUtils.randomAlphabetic(2);
-    }
 }
