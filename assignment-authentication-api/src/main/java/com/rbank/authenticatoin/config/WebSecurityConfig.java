@@ -46,6 +46,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/auth/sign-in").permitAll()
                                 .requestMatchers("/api/auth/sign-up").permitAll()
                                 .requestMatchers("/api/auth/verify").permitAll()
+                                .requestMatchers("/api/auth/validate-token").permitAll()
                                 .requestMatchers("/api/**").authenticated()
                                 .anyRequest().denyAll()
                 ).authenticationProvider(authenticationProvider()).addFilterBefore(

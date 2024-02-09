@@ -8,7 +8,7 @@ import com.rbank.authenticatoin.model.UserVerification;
 import com.rbank.authenticatoin.service.AuthService;
 import com.rbank.authenticatoin.service.JwtService;
 import com.rbank.authenticatoin.service.dto.EmailVerificationRequest;
-import com.rbank.authenticatoin.service.dto.JwtAuthenticationResponse;
+import com.rbank.authenticatoin.service.dto.JwtAuthenticationToken;
 import com.rbank.authenticatoin.service.dto.SignInRequest;
 import com.rbank.authenticatoin.service.dto.SignUpRequest;
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +32,10 @@ public class AuthServiceImpl implements AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+
+    public boolean validateToken(String token) {
+        return jwtService.isTokenExpired(token);
+    }
 
     @Transactional
     @Override
@@ -58,21 +62,21 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         if (verification.getCode().equals(emailVerificationRequest.code())) {
             userServiceImpl.verifyUser(verification.getUser());
-        }else{
+        } else {
             throw new IllegalArgumentException("Invalid verification code");
         }
 
     }
 
     @Override
-    public JwtAuthenticationResponse signIn(SignInRequest request) {
+    public JwtAuthenticationToken signIn(SignInRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         User user = userServiceImpl.findUserByUsername(request.username());
         var userPrincipals = new UserPrincipals(user.getUsername(), user.getPassword(),
                 user.getRoles().stream().map(Role::getTitle).toList());
         var jwt = jwtService.generateToken(userPrincipals);
-        return new JwtAuthenticationResponse(jwt);
+        return new JwtAuthenticationToken(jwt);
     }
 
 }
