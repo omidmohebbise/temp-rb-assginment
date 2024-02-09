@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "verifications")
+@Table(name = "verifications" , schema = "security_schema")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
