@@ -4,6 +4,7 @@ import com.rbank.bank.model.Account;
 import com.rbank.bank.model.Transaction;
 import com.rbank.bank.service.AccountService;
 import com.rbank.bank.service.dto.CreateAccount;
+import com.rbank.bank.service.dto.TransferMoneyDto;
 import com.rbank.bank.service.dto.UpdateAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
 public class AccountController {
+
     private final AccountService accountService;
 
     @PostMapping
@@ -49,10 +51,8 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("/transfer")
-    public ResponseEntity<Transaction> transferMoney(@RequestParam Long sourceAccountId,
-                                                     @RequestParam Long destinationAccountId,
-                                                     @RequestParam double amount) {
-        Transaction transaction = accountService.transferMoney(sourceAccountId, destinationAccountId, amount);
+    public ResponseEntity<Transaction> transferMoney(@RequestBody TransferMoneyDto transferMoneyDto){
+        Transaction transaction = accountService.transferMoney(transferMoneyDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(transaction);
     }
 }

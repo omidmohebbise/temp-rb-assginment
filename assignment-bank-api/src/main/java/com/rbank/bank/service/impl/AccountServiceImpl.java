@@ -11,8 +11,11 @@ import com.rbank.bank.model.exception.UserNotFound;
 import com.rbank.bank.service.AccountService;
 import com.rbank.bank.service.UserService;
 import com.rbank.bank.service.dto.CreateAccount;
+import com.rbank.bank.service.dto.TransferMoneyDto;
 import com.rbank.bank.service.dto.UpdateAccount;
+import com.rbank.bank.service.validator.AccountValidator;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -23,20 +26,25 @@ import java.util.List;
 public class AccountServiceImpl implements AccountService {
 
     private final UserService userService;
+    private final AccountValidator accountValidator;
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
     public Account createAccount(CreateAccount account) {
-        User user = userService.findUserById(account.userId()).orElseThrow(
-                () -> new UserNotFound("User not found")
-        );
+        accountValidator.isValid(account);
+        User user = userService.getUserById(account.userId());
+
         Account newAccount = Account.builder()
                 .user(user)
                 .accountHolderName(account.accountHolderName())
-                .accountNumber(account.accountNumber())
+                .accountNumber(createAccountNumber())
                 .balance(account.balance())
                 .build();
         return accountRepository.save(newAccount);
+    }
+
+    private String createAccountNumber() {
+        return RandomStringUtils.randomNumeric(10);
     }
 
     public List<Account> getAllAccounts(int page, int size) {
@@ -44,44 +52,44 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public Account getAccountById(Long id) {
-            return accountRepository.findById(id).orElseThrow(() -> new AccountNotFoundException());
+            return accountRepository.findById(id).orElseThrow(() ->
+                    new AccountNotFoundException(" Account not found with id: " + id + " "));
     }
 
     public Account updateAccount(Long id, UpdateAccount accountDetails) {
+        accountValidator.isValid(accountDetails);
         Account account = getAccountById(id);
-        account.setAccountNumber(accountDetails.accountNumber());
         account.setAccountHolderName(accountDetails.accountHolderName());
         account.setBalance(accountDetails.balance());
         return accountRepository.save(account);
     }
 
-    public void deleteAccount(Long id) {
-        accountRepository.deleteById(id);
+    public void deleteAccount(Long userId) {
+        userService.getUserById(userId);
+        accountRepository.deleteById(userId);
     }
 
-    public Transaction transferMoney(Long sourceAccountId, Long destinationAccountId, double amount) {
+    public Transaction transferMoney(TransferMoneyDto transferMoneyDto) {
         Account sourceAccount;
         Account destinationAccount;
 
         try {
-            sourceAccount = getAccountById(sourceAccountId);
-            destinationAccount = getAccountById(destinationAccountId);
+            sourceAccount = getAccountById(transferMoneyDto.sourceAccountId());
+            destinationAccount = getAccountById(transferMoneyDto.destinationAccountId());
         }catch (Exception e) {
             throw new AccountNotFoundException("Source or Destination Account not found");
         }
 
-        if (sourceAccount.getBalance() >= amount) {
-            sourceAccount.setBalance(sourceAccount.getBalance() - amount);
-            destinationAccount.setBalance(destinationAccount.getBalance() + amount);
+        if (sourceAccount.getBalance() >= transferMoneyDto.amount()) {
+            sourceAccount.setBalance(sourceAccount.getBalance() - transferMoneyDto.amount());
+            destinationAccount.setBalance(destinationAccount.getBalance() + transferMoneyDto.amount());
             accountRepository.save(sourceAccount);
             accountRepository.save(destinationAccount);
-            Transaction transaction = new Transaction(sourceAccount, destinationAccount, amount);
+            Transaction transaction = new Transaction(sourceAccount, destinationAccount, transferMoneyDto.amount());
             return transactionRepository.save(transaction);
         }else {
             throw new InsufficientBalanceException("Insufficient balance in source account");
         }
     }
-
-
 
 }

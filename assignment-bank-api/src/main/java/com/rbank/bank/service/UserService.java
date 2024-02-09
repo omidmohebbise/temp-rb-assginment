@@ -15,4 +15,5 @@ public interface UserService extends UserDetailsService {
     void verifyUser(User user);
 
     Optional<User> findUserById(Long aLong);
+    User getUserById(Long aLong);
 }

@@ -5,6 +5,7 @@ import com.rbank.bank.dao.UserRepository;
 import com.rbank.bank.model.Role;
 import com.rbank.bank.model.User;
 import com.rbank.bank.model.UserPrincipals;
+import com.rbank.bank.model.exception.UserNotFound;
 import com.rbank.bank.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,4 +53,12 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findUserById(Long userId) {
         return userRepository.findById(userId);
     }
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFound("User not found")
+        );
+    }
+
+
 }

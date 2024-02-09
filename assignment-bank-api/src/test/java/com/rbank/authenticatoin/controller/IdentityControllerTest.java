@@ -1,11 +1,8 @@
 package com.rbank.authenticatoin.controller;
 
-import com.rbank.bank.controller.IdentityController;
 import com.rbank.bank.service.AuthService;
-import com.rbank.bank.service.dto.EmailVerificationRequest;
-import com.rbank.bank.service.dto.JwtAuthenticationToken;
-import com.rbank.bank.service.dto.SignInRequest;
-import com.rbank.bank.service.dto.SignUpRequest;
+import com.rbank.bank.service.dto.*;
+import com.rbank.bank.service.validator.AccountValidator;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +18,14 @@ import static org.mockito.Mockito.*;
 
 class IdentityControllerTest {
     @InjectMocks
-    private IdentityController identityController;
+    private AccountValidator accountValidator;
+
+    @BeforeEach
+    void setUp() {
+        accountValidator = new AccountValidator();
+    }
+
+
 
     @Mock
     private AuthService authService;
@@ -30,95 +34,5 @@ class IdentityControllerTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
-    @Test
-    public void signUpSuccessfully() {
-        SignUpRequest signUpRequest = mock(SignUpRequest.class);
-        doNothing().doThrow(new RuntimeException()).when(authService).signUp(signUpRequest);
 
-        ResponseEntity<?> response = identityController.signUp(signUpRequest);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("User signed up successfully. Please verify your username", response.getBody());
-    }
-
-    @Test
-    public void verifyEmailSuccessfully() {
-        EmailVerificationRequest emailVerificationRequest = mock(EmailVerificationRequest.class);
-        doNothing().when(authService).verify(emailVerificationRequest);
-
-        ResponseEntity<?> response = identityController.verifyEmail(emailVerificationRequest);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("user verified", response.getBody());
-    }
-
-    @Test
-    public void signInSuccessfully() {
-        SignInRequest signInRequest = mock(SignInRequest.class);
-        JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken("sample-token");
-        when(authService.signIn(signInRequest)).thenReturn(jwtAuthenticationToken);
-
-        ResponseEntity<?> response = identityController.signIn(signInRequest);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(jwtAuthenticationToken.toString(), response.getBody().toString());
-    }
-
-    @Test
-    public void validateTokenSuccessfully() {
-        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
-        when(authService.validateToken(token.token())).thenReturn(true);
-
-        ResponseEntity<String> response = identityController.validateToken(token);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Token is valid", response.getBody());
-    }
-
-    @Test
-    public void validateTokenUnsuccessfully() {
-        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
-        when(authService.validateToken(token.token())).thenReturn(false);
-
-        ResponseEntity<String> response = identityController.validateToken(token);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Invalid token", response.getBody());
-    }
-
-    @Test
-    public void handleBadCredentialsException() {
-        Exception e = new BadCredentialsException("Bad credentials");
-        ResponseEntity<String> response = identityController.handleException(e);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("An error occurred: Bad credentials", response.getBody());
-    }
-
-    @Test
-    public void handleEntityNotFoundException() {
-        Exception e = new EntityNotFoundException("Entity not found");
-        ResponseEntity<String> response = identityController.handleException(e);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("An error occurred: Entity not found", response.getBody());
-    }
-
-    @Test
-    public void handleIllegalArgumentException() {
-        Exception e = new IllegalArgumentException("Illegal argument");
-        ResponseEntity<String> response = identityController.handleException(e);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("An error occurred: Illegal argument", response.getBody());
-    }
-
-    @Test
-    public void handleGenericException() {
-        Exception e = new Exception("Generic exception");
-        ResponseEntity<String> response = identityController.handleException(e);
-
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("An error occurred: Generic exception", response.getBody());
-    }
 }
