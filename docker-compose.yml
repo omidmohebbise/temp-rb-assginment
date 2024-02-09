@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 123#$%abc%$#ABC
+      POSTGRES_USER: rb_database_user
+      POSTGRES_DB: rb_db
+    ports:
+      - "5432:5432"
