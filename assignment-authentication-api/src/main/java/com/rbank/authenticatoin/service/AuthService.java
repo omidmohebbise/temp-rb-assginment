@@ -7,7 +7,7 @@ import com.rbank.authenticatoin.service.dto.SignInRequest;
 import com.rbank.authenticatoin.service.dto.SignUpRequest;
 
 public interface AuthService {
-    User signUp(SignUpRequest signUpRequest);
+    void signUp(SignUpRequest signUpRequest);
 
     void verify(EmailVerificationRequest emailVerificationRequest);
 

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -53,7 +54,7 @@ public class IdentityController {
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
         else if (e instanceof IllegalArgumentException)
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        else if (e instanceof EntityNotFoundException)
+        else if (e instanceof EntityNotFoundException || e instanceof UsernameNotFoundException)
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.NOT_FOUND);
         else
             return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

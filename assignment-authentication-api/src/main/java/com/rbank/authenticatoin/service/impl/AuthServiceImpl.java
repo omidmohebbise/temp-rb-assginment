@@ -39,11 +39,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Transactional
     @Override
-    public User signUp(SignUpRequest signUpRequest) {
+    public void signUp(SignUpRequest signUpRequest) {
         User user = userServiceImpl.createUser(signUpRequest.fullName(),
                 signUpRequest.email(), passwordEncoder.encode(signUpRequest.password()));
         createVerificationCode(user);
-        return user;
     }
 
     private void createVerificationCode(User user) {
