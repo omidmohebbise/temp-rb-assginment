@@ -78,7 +78,7 @@ public class AccountServiceImplTest {
     @Test
     public void updateAccount() {
         // Given
-        Long accountId = 1L;
+        long accountId = 1L;
         String accountHolderName = "John Doe";
         double balance = 100.0;
         UpdateAccount updateAccount = new UpdateAccount(accountHolderName, balance);

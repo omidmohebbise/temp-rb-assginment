@@ -21,9 +21,7 @@ public class UserPrincipals implements UserDetails {
             return Collections.emptySet();
         }else{
             Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
-            roles.forEach(role->{
-                grantedAuthorities.add(new SimpleGrantedAuthority(role));
-            });
+            roles.forEach(role-> grantedAuthorities.add(new SimpleGrantedAuthority(role)));
             return grantedAuthorities;
         }
 

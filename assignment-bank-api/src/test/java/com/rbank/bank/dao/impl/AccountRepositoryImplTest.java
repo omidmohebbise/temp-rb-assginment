@@ -4,7 +4,6 @@ import com.rbank.bank.dao.AccountRepository;
 import com.rbank.bank.model.Account;
 import com.rbank.bank.model.User;
 import com.rbank.util.BaseIntegrationTest;
-import com.rbank.util.BaseUnitTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
