@@ -18,8 +18,4 @@ public class Role {
     private String title;
     private String description;
 
-    public Role(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
 }

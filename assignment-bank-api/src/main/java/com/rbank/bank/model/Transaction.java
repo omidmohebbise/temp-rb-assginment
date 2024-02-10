@@ -33,5 +33,9 @@ public class Transaction {
     private LocalDateTime transactionDateTime;
 
     public Transaction(Account sourceAccount, Account destinationAccount, double amount) {
+        this.sourceAccount = sourceAccount;
+        this.destinationAccount = destinationAccount;
+        this.amount = amount;
+        this.transactionDateTime = LocalDateTime.now();
     }
 }

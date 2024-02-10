@@ -20,7 +20,7 @@ public class UserPrincipals implements UserDetails {
         if(roles == null){
             return Collections.emptySet();
         }else{
-            Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet();
+            Set<SimpleGrantedAuthority> grantedAuthorities = new HashSet<>();
             roles.forEach(role->{
                 grantedAuthorities.add(new SimpleGrantedAuthority(role));
             });

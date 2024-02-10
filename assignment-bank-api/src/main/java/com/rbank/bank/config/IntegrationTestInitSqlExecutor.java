@@ -27,9 +27,9 @@ public class IntegrationTestInitSqlExecutor implements ApplicationListener<Conte
     }
 
     private void executeInitSql() {
-        ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(initSqlScript);
-        populator.execute(dataSource);
+        ResourceDatabasePopulator popular = new ResourceDatabasePopulator();
+        popular.addScript(initSqlScript);
+        popular.execute(dataSource);
     }
     @Override
     public boolean supportsAsyncExecution() {
