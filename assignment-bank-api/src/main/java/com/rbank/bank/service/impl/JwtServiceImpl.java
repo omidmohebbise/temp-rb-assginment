@@ -53,10 +53,9 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public boolean isTokenExpired(String token) {
-        if(extractExpiration(token).after(new Date()))
-            return true;
-        else
+        if(extractExpiration(token).before(new Date()))
             throw new BadCredentialsException("Token has expired");
+        else return false;
     }
 
     private Date extractExpiration(String token) {

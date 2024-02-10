@@ -1,6 +1,7 @@
 package com.rbank.bank.service.impl;
 
 
+import com.rbank.bank.dao.RoleRepository;
 import com.rbank.bank.dao.UserRepository;
 import com.rbank.bank.model.Role;
 import com.rbank.bank.model.User;
@@ -19,6 +20,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     public UserDetails loadUserByUsername(String username) {
         var user = userRepository.findByUsername(username)
@@ -33,11 +35,13 @@ public class UserServiceImpl implements UserService {
 
 
     public User createUser(String fullName, String username, String password) {
+        var userRole = roleRepository.getRoleByTitle("USER")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
         return userRepository.save(User.builder()
                 .fullName(fullName)
                 .username(username)
                 .password(password)
-                .roles(Set.of(Role.builder().title("USER").build()))
+                .roles(Set.of(userRole))
                 .enabled(false)
                 .verified(false)
                 .build());
