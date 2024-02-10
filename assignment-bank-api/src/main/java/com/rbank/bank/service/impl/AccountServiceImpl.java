@@ -10,7 +10,7 @@ import com.rbank.bank.model.exception.InsufficientBalanceException;
 import com.rbank.bank.service.AccountService;
 import com.rbank.bank.service.UserService;
 import com.rbank.bank.service.dto.CreateAccount;
-import com.rbank.bank.service.dto.TransferMoneyDto;
+import com.rbank.bank.service.dto.TransferMoney;
 import com.rbank.bank.service.dto.UpdateAccount;
 import com.rbank.bank.service.validator.AccountValidator;
 import lombok.RequiredArgsConstructor;
@@ -67,23 +67,23 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.deleteById(getAccountById(accountId));
     }
 
-    public Transaction transferMoney(TransferMoneyDto transferMoneyDto) {
+    public Transaction transferMoney(TransferMoney transferMoney) {
         Account sourceAccount;
         Account destinationAccount;
 
         try {
-            sourceAccount = getAccountById(transferMoneyDto.sourceAccountId());
-            destinationAccount = getAccountById(transferMoneyDto.destinationAccountId());
+            sourceAccount = getAccountById(transferMoney.sourceAccountId());
+            destinationAccount = getAccountById(transferMoney.destinationAccountId());
         }catch (Exception e) {
             throw new AccountNotFoundException("Source or Destination Account not found");
         }
 
-        if (sourceAccount.getBalance() >= transferMoneyDto.amount()) {
-            sourceAccount.setBalance(sourceAccount.getBalance() - transferMoneyDto.amount());
-            destinationAccount.setBalance(destinationAccount.getBalance() + transferMoneyDto.amount());
+        if (sourceAccount.getBalance() >= transferMoney.amount()) {
+            sourceAccount.setBalance(sourceAccount.getBalance() - transferMoney.amount());
+            destinationAccount.setBalance(destinationAccount.getBalance() + transferMoney.amount());
             accountRepository.save(sourceAccount);
             accountRepository.save(destinationAccount);
-            Transaction transaction = new Transaction(sourceAccount, destinationAccount, transferMoneyDto.amount());
+            Transaction transaction = new Transaction(sourceAccount, destinationAccount, transferMoney.amount());
             return transactionRepository.save(transaction);
         }else {
             throw new InsufficientBalanceException("Insufficient balance in source account");

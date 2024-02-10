@@ -1,10 +1,9 @@
 package com.rbank.bank.controller;
 
 import com.rbank.bank.model.Account;
-import com.rbank.bank.model.Transaction;
 import com.rbank.bank.service.AccountService;
 import com.rbank.bank.service.dto.CreateAccount;
-import com.rbank.bank.service.dto.TransferMoneyDto;
+import com.rbank.bank.service.dto.TransferMoney;
 import com.rbank.bank.service.dto.UpdateAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -51,7 +50,7 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("/transfer")
-    public ResponseEntity<?> transferMoney(@RequestBody TransferMoneyDto transferMoneyDto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.transferMoney(transferMoneyDto).getId());
+    public ResponseEntity<?> transferMoney(@RequestBody TransferMoney transferMoney){
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.transferMoney(transferMoney).getId());
     }
 }

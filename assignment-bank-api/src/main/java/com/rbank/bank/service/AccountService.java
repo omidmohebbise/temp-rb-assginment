@@ -3,7 +3,7 @@ package com.rbank.bank.service;
 import com.rbank.bank.model.Account;
 import com.rbank.bank.model.Transaction;
 import com.rbank.bank.service.dto.CreateAccount;
-import com.rbank.bank.service.dto.TransferMoneyDto;
+import com.rbank.bank.service.dto.TransferMoney;
 import com.rbank.bank.service.dto.UpdateAccount;
 
 
@@ -15,5 +15,5 @@ public interface AccountService {
     Account getAccountById(long id);
     Account updateAccount(long id, UpdateAccount accountDetails);
     void deleteAccount(Long id);
-    Transaction transferMoney(TransferMoneyDto transferMoneyDto);
+    Transaction transferMoney(TransferMoney transferMoney);
 }

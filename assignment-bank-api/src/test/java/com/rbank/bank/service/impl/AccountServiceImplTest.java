@@ -9,7 +9,7 @@ import com.rbank.bank.model.exception.AccountNotFoundException;
 import com.rbank.bank.model.exception.InsufficientBalanceException;
 import com.rbank.bank.service.UserService;
 import com.rbank.bank.service.dto.CreateAccount;
-import com.rbank.bank.service.dto.TransferMoneyDto;
+import com.rbank.bank.service.dto.TransferMoney;
 import com.rbank.bank.service.dto.UpdateAccount;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -121,7 +121,7 @@ public class AccountServiceImplTest {
 
         Transaction transaction = new Transaction(sourceAccount, destinationAccount, 300.0);
 
-        TransferMoneyDto transferMoneyDto = new TransferMoneyDto(1L, 2L, 300.0);
+        TransferMoney transferMoney = new TransferMoney(1L, 2L, 300.0);
 
         // Mock repository behavior
         when(accountRepository.findByAccountId(1L)).thenReturn(Optional.of(sourceAccount));
@@ -129,7 +129,7 @@ public class AccountServiceImplTest {
         when(transactionRepository.save(any())).thenReturn(transaction);
 
         // Execute the method
-        Transaction transactionResult = accountService.transferMoney(transferMoneyDto);
+        Transaction transactionResult = accountService.transferMoney(transferMoney);
 
         // Verify balances and transaction
         assertEquals(700.0, sourceAccount.getBalance());
@@ -145,7 +145,7 @@ public class AccountServiceImplTest {
         destinationAccount.setId(2L);
         destinationAccount.setBalance(500.0);
 
-        TransferMoneyDto transferMoneyDto = new TransferMoneyDto(1L, 2L, 3000.0);
+        TransferMoney transferMoney = new TransferMoney(1L, 2L, 3000.0);
 
         // Mock repository behavior
         when(accountRepository.findByAccountId(1L)).thenReturn(Optional.empty());
@@ -153,7 +153,7 @@ public class AccountServiceImplTest {
 
         // Execute the method
         var result = assertThrows(AccountNotFoundException.class,
-                () -> accountService.transferMoney(transferMoneyDto));
+                () -> accountService.transferMoney(transferMoney));
         assertEquals("Source or Destination Account not found" , result.getMessage());
     }
 
@@ -165,7 +165,7 @@ public class AccountServiceImplTest {
         source.setId(2L);
         source.setBalance(500.0);
 
-        TransferMoneyDto transferMoneyDto = new TransferMoneyDto(1L, 2L, 3000.0);
+        TransferMoney transferMoney = new TransferMoney(1L, 2L, 3000.0);
 
         // Mock repository behavior
         when(accountRepository.findByAccountId(1L)).thenReturn(Optional.of(source));
@@ -173,7 +173,7 @@ public class AccountServiceImplTest {
 
         // Execute the method
         var result = assertThrows(AccountNotFoundException.class,
-                () -> accountService.transferMoney(transferMoneyDto));
+                () -> accountService.transferMoney(transferMoney));
         assertEquals("Source or Destination Account not found" , result.getMessage());
     }
 
@@ -188,7 +188,7 @@ public class AccountServiceImplTest {
         destinationAccount.setId(2L);
         destinationAccount.setBalance(500.0);
 
-        TransferMoneyDto transferMoneyDto = new TransferMoneyDto(1L, 2L, 3000.0);
+        TransferMoney transferMoney = new TransferMoney(1L, 2L, 3000.0);
 
         // Mock repository behavior
         when(accountRepository.findByAccountId(1L)).thenReturn(Optional.of(sourceAccount));
@@ -196,7 +196,7 @@ public class AccountServiceImplTest {
 
         // Execute the method
         var result = assertThrows(InsufficientBalanceException.class,
-                () -> accountService.transferMoney(transferMoneyDto));
+                () -> accountService.transferMoney(transferMoney));
         assertEquals("Insufficient balance in source account", result.getMessage());
     }
 }
