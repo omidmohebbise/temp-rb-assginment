@@ -9,7 +9,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @ActiveProfiles("test")
-public class BaseIntegration {
+public class BaseIntegrationTest {
 
     @LocalServerPort
     private Integer port;
