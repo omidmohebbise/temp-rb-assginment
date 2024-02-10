@@ -51,8 +51,7 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("/transfer")
-    public ResponseEntity<Transaction> transferMoney(@RequestBody TransferMoneyDto transferMoneyDto){
-        Transaction transaction = accountService.transferMoney(transferMoneyDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(transaction);
+    public ResponseEntity<?> transferMoney(@RequestBody TransferMoneyDto transferMoneyDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.transferMoney(transferMoneyDto).getId());
     }
 }

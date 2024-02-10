@@ -1,5 +1,4 @@
 package com.rbank.bank.service.dto;
 
-public record TransferMoneyDto (Long sourceAccountId, Long destinationAccountId,
-                               double amount){
+public record TransferMoneyDto(Long sourceAccountId, Long destinationAccountId, double amount) {
 }
