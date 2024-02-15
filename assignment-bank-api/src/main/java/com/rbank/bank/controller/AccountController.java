@@ -1,10 +1,11 @@
 package com.rbank.bank.controller;
 
 import com.rbank.bank.model.Account;
-import com.rbank.bank.model.Transaction;
 import com.rbank.bank.service.AccountService;
 import com.rbank.bank.service.dto.CreateAccount;
+import com.rbank.bank.service.dto.TransferMoney;
 import com.rbank.bank.service.dto.UpdateAccount;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +16,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
+@SecurityRequirement(name="Bearer Authentication")
 public class AccountController {
+
     private final AccountService accountService;
 
     @PostMapping
-    public ResponseEntity<?> createAccount(@RequestBody CreateAccount createAccount) {
-        Account account = accountService.createAccount(createAccount);
-        return ResponseEntity.status(HttpStatus.CREATED).body(account);
+    public ResponseEntity<String> createAccount(@RequestBody CreateAccount createAccount) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(accountService.createAccount(createAccount).getAccountNumber());
     }
 
     @GetMapping("/{id}")
@@ -49,10 +52,7 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
     @PostMapping("/transfer")
-    public ResponseEntity<Transaction> transferMoney(@RequestParam Long sourceAccountId,
-                                                     @RequestParam Long destinationAccountId,
-                                                     @RequestParam double amount) {
-        Transaction transaction = accountService.transferMoney(sourceAccountId, destinationAccountId, amount);
-        return ResponseEntity.status(HttpStatus.CREATED).body(transaction);
+    public ResponseEntity<?> transferMoney(@RequestBody TransferMoney transferMoney){
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.transferMoney(transferMoney).getId());
     }
 }

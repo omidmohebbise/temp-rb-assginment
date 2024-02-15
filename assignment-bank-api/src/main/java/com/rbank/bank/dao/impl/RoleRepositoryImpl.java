@@ -6,6 +6,8 @@ import com.rbank.bank.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class RoleRepositoryImpl implements RoleRepository {
@@ -13,7 +15,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     private final RoleJpaRepository repository;
 
     @Override
-    public Role findByTitle(String username) {
+    public Optional<Role> getRoleByTitle(String username) {
         return repository.findByTitle(username);
     }
 }

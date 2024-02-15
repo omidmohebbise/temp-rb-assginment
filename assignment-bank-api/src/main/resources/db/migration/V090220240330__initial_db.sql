@@ -45,5 +45,5 @@ create table security_schema.verifications
 );
 
 
-insert into security_schema.roles (id, description, title) values (1, 'Admin', 'USER');
+insert into security_schema.roles (id, description, title) values (1, 'User', 'USER');
 

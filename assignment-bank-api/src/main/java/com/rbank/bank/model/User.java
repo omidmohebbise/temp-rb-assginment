@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users" , schema = "security_schema")
+@Table(name = "users", schema = "security_schema")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -30,12 +30,13 @@ public class User {
     private Boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles" , joinColumns = @JoinColumn(name = "user_Id", referencedColumnName = "id"),
-            inverseJoinColumns =@JoinColumn(name = "role_Id",referencedColumnName ="id") )
+    @JoinTable(name = "users_roles", schema = "security_schema",
+            joinColumns = @JoinColumn(name = "user_Id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_Id", referencedColumnName = "id"))
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
-    public User( String fullName,String username, String password) {
+    public User(String fullName, String username, String password) {
         this.username = username;
         this.fullName = fullName;
         this.password = password;

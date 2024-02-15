@@ -23,8 +23,8 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Optional<Account> findById(Long id) {
-        return repository.findById(id);
+    public Optional<Account> findByAccountId(Long accountId) {
+        return repository.findById(accountId);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void deleteById(Long id) {
-        repository.deleteById(id);
+    public void deleteById(Account existingAccount) {
+        repository.deleteById(existingAccount.getId());
     }
 }
